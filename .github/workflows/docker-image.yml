@@ -13,11 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Build and push Docker images
-      uses: docker/build-push-action@v1.1.0
-      with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-        repository: gnovack/celebs-cnn
-   
+    - uses: actions/checkout@v1
+    - name: Login to DockerHub Registry
+      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+    - name: Build the tagged Docker image
+      run: docker build . --file Dockerfile --tag gnovack/celebs-cnn
+    - name: Push the tagged Docker image
+      run: docker push gnovack/celebs-cnn
